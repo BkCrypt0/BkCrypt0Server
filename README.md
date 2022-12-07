@@ -50,7 +50,9 @@ $ make adminRoles
 ```
 
 ### Add zkey and verifykey of circuit
-- Copy *.wasm, *.zkey from BkCrypt0-Circuit/src/claim to ./circuits
+- Copy *.wasm, *.zkey, generate_witness.js, witness_calculator.js  from BkCrypt0-Resources/KYC_circuit/claim to ./circuits/claims/claim_${version}
+- Copy *.wasm, *.zkey, generate_witness.js, witness_calculator.js from BkCrypt0-Resources/KYC_circuit/revoke to ./circuits/revokes/revoke_${version}
+- Copy *.wasm, *.zkey ,generate_witness.js, witness_calculator.js from BkCrypt0-Resources/KYC_circuit/unrevoke to ./circuits/unrevoke/
 
 ### Run server
 ```
@@ -58,3 +60,5 @@ $ npm start
 ```
 
 ## API
+
+Link Swagger : https://app.swaggerhub.com/apis-docs/rikikudohust/BkCrypto/1.0.0#/
