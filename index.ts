@@ -12,11 +12,11 @@ import { revokeRouter } from "./src/routes/revokeRouter";
 import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 dotenv.config();
 //DB
-import {CacheDB, ClaimTreeCache, connectMongo, Eddsa, LevelDB, RevokeCache, RevokeDb, TestLevelDB} from './connect'
+import {CacheDB, connectMongo, Eddsa, LevelDB, RevokeCache, RevokeDb, TestLevelDB} from './connect'
 import { authenRouter } from "./src/routes/authorizationRouter";
 import { hashRouter } from "./src/routes/hashRouter";
 import { hashMimc } from "./connect";
-// import { unrevokeRouter } from "./src/routes/unrevokeRouter";
+import { unrevokeRouter } from "./src/routes/unrevokeRouter";
 
 var app = express();
 const port = process.env.PORT; // default port to listen
@@ -33,7 +33,7 @@ app.use("/revoke", revokeRouter)
 // app.use("/test", testRouter);
 app.use("/authen", authenRouter);
 app.use("/hash", hashRouter)
-// app.use("/unrevoke", unrevokeRouter);
+app.use("/unrevoke", unrevokeRouter);
 
 // define a route handler for the default home page
 app.get("/", async (req, res) => {
@@ -45,7 +45,6 @@ app.get("/", async (req, res) => {
 
 // start the express server
 app.listen(port, async () => {
-  // tslint:disable-next-line:no-console
   var db = await LevelDB.getInstance();
   await RevokeDb.getInstance();
   await RevokeCache.getInstance();
