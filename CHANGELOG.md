@@ -1,3 +1,5 @@
+
+Release-candidate
 - Feature: Add API Document
 - Merge pull request #4 from BkCrypt0/Document
 - Update README file
@@ -13,4 +15,6 @@
 - Update Index.js
 - Update readme
 - Add submodule
+
+Version 1
 - Prepare Server
