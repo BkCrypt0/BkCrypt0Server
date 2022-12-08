@@ -1,12 +1,12 @@
 import express from "express";
 import { json } from "body-parser";
 import cors from "cors";
-// import { claimRouter } from "./src/routes/claimRouter";
+import { claimRouter } from "./src/routes/claimRouter";
 import { userRouter } from "./src/routes/userRouter";
 import { publishedRouter } from "./src/routes/publishedRouter";
 import { issueRouter } from "./src/routes/issueRouter";
 import { mappingRouter } from "./src/routes/mappingRouter";
-// import { revokeRouter } from "./src/routes/revokeRouter";
+import { revokeRouter } from "./src/routes/revokeRouter";
 
 //Dotenv
 import * as dotenv from "dotenv"; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
@@ -24,12 +24,12 @@ connectMongo()
 
 app.use(json());
 app.use(cors());
-// app.use("/claimed", claimRouter);
+app.use("/claimed", claimRouter);
 app.use("/users", userRouter);
 app.use("/published", publishedRouter);
 app.use("/issue", issueRouter);
 app.use("/mapping", mappingRouter);
-// app.use("/revoke", revokeRouter)
+app.use("/revoke", revokeRouter)
 // app.use("/test", testRouter);
 app.use("/authen", authenRouter);
 app.use("/hash", hashRouter)
