@@ -34,6 +34,7 @@ $ git submodule init
 $ git submodule update
 $ npx task createFieldSources
 $ npx task buildProver
+$ cd ..
 
 ```
 ### Config url and ENVIRONMENT_VARIABLE in .env
@@ -50,8 +51,8 @@ $ make adminRoles
 ```
 
 ### Add zkey and verifykey of circuit
-- Copy *.wasm, *.zkey, generate_witness.js, witness_calculator.js  from BkCrypt0-Resources/KYC_circuit/claim to ./circuits/claims/claim_${version}
-- Copy *.wasm, *.zkey, generate_witness.js, witness_calculator.js from BkCrypt0-Resources/KYC_circuit/revoke to ./circuits/revokes/revoke_${version}
+- Copy *.wasm, *.zkey, generate_witness.js, witness_calculator.js  from BkCrypt0-Resources/KYC_circuit/claims/claim_${version} to ./circuits/claim/
+- Copy *.wasm, *.zkey, generate_witness.js, witness_calculator.js from BkCrypt0-Resources/KYC_circuit/revokes/revoke_${version} to ./circuits/revoke/
 - Copy *.wasm, *.zkey ,generate_witness.js, witness_calculator.js from BkCrypt0-Resources/KYC_circuit/unrevoke to ./circuits/unrevoke/
 
 ### Run server
