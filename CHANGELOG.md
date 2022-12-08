@@ -1,3 +1,4 @@
+# Release-final
 
 # Release-candidate
 - Feature: Add API Document
@@ -9,12 +10,12 @@
 - Feature: generate Revoke Proof and update Revoke Proof
 - Merge pull request #1 from BkCrypt0/claimIdentityFeature
 - Claim Identity Feature: version 1
+
+# Version 1
 - Create LICENSE
 - Delete LICENSE.md
 - Create LICENSE
 - Update Index.js
 - Update readme
 - Add submodule
-
-# Version 1
 - Prepare Server
