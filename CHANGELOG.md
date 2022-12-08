@@ -1,5 +1,5 @@
 
-Release-candidate
+# Release-candidate
 - Feature: Add API Document
 - Merge pull request #4 from BkCrypt0/Document
 - Update README file
@@ -16,5 +16,5 @@ Release-candidate
 - Update readme
 - Add submodule
 
-Version 1
+# Version 1
 - Prepare Server
