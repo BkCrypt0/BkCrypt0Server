@@ -25,11 +25,12 @@ RUN npx task buildProver
 # Go back to the root directory
 WORKDIR /app
 
-# Copy the rest of the project files to the container
 COPY . .
 
+RUN npm run build
+# Copy the rest of the project files to the container
 # Expose a port if needed (replace 3000 with your desired port number)
 EXPOSE 3000
 
 # Specify the command to run when the container starts
-CMD ["node", "index.js"]
+CMD ["node", "build/index.js"]
