@@ -1,0 +1,12 @@
+node_modules
+.dockerignore
+.git
+.gitignore
+.gitmodules
+.gitmodules
+./rapidsnark/.vscode
+./rapidsnark/node_modules
+./rapidsnark/.git
+./rapidsnark/.gitignore
+./rapidsnark/.gitmodules
+
