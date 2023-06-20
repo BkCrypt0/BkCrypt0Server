@@ -7,7 +7,6 @@ import { LevelDB, ClaimTreeCache, CacheDB } from "../../connect";
 import { ClaimTree } from "../utils/claimTree";
 import { IdentityStatus } from "../config/constant";
 import IdentityMapping from "../models/identityMapping";
-import Claim, { IClaim } from "../models/claim";
 import { generateClaimProof } from "../services/js/generateClaimProof";
 import { signatureToArray } from "../utils/objectToArray";
 import { ClaimMemTree } from "../utils/claimMemTree";
@@ -17,7 +16,7 @@ dotenv.config();
 
 async function getUnpublished() {
   var max_publish_data = Number(process.env.MAX_PUBLISH_DATA) || 50;
-  var unpublishedData = await Claim.find({ isPublish: false }).limit(
+  var unpublishedData = await Issue.find({ isPublish: false }).limit(
     max_publish_data
   );
   return unpublishedData;
@@ -32,10 +31,10 @@ async function getPublishIndex(): Promise<number> {
   return await Publish.count({});
 }
 
-async function getPublishData(publishIndexs: Number[]): Promise<IClaim[]> {
-  var publishData = new Array<IClaim>(publishIndexs.length);
+async function getPublishData(publishIndexs: Number[]): Promise<IIssue[]> {
+  var publishData = new Array<IIssue>(publishIndexs.length);
   for (let i = 0; i < publishIndexs.length; i++) {
-    var publishTmp = await Claim.findOne({ CCCD: publishIndexs[i] });
+    var publishTmp = await Issue.findOne({ CCCD: publishIndexs[i] });
     if (publishTmp != null) {
       publishData[i] = publishTmp;
     }
@@ -44,7 +43,6 @@ async function getPublishData(publishIndexs: Number[]): Promise<IClaim[]> {
   return publishData;
 }
 async function getPublishDataProof(req: Request) {
-  //
   var smtCache: ClaimTree = await CacheDB.getInstance();
   var publishIndex: Array<Number> = [];
   var signatures = [];
@@ -54,25 +52,25 @@ async function getPublishDataProof(req: Request) {
   var unpublishedData = await getUnpublished();
   var amountDataPublish = await unpublishedData.length;
   if (amountDataPublish == 0) {
-    throw Error("Not data to publish");
+    throw Error("Empty data to publish");
   }
   var length = await getPublishIndex();
   var handleError: number = 0;
 
   try {
     for (let i = 0; i < unpublishedData.length; i++) {
-      var unpublishedTmp: IClaim = unpublishedData[i];
+      var unpublishedTmp: IIssue = unpublishedData[i];
       signatures.push(signatureToArray(unpublishedTmp.signature));
       let resInsert = await smtCache.addId(
         BigInt(length + i),
-        unpublishedTmp.publicKey,
+        unpublishedTmp.owner,
         BigInt(unpublishedTmp.CCCD),
         BigInt(unpublishedTmp.sex),
         BigInt(unpublishedTmp.DoBdate),
         BigInt(unpublishedTmp.BirthPlace)
       );
       cards.push({
-        publicKey: unpublishedTmp.publicKey,
+        publicKey: unpublishedTmp.owner,
         CCCD: unpublishedTmp.CCCD,
         sex: unpublishedTmp.sex,
         DoBdate: unpublishedTmp.DoBdate,
@@ -141,10 +139,10 @@ async function published(req: Request) {
   var unpublishedData = await getUnpublished();
   var length = await getPublishIndex();
   for (let i = 0; i < unpublishedData.length; i++) {
-    var unpublishedTmp: IClaim = unpublishedData[i];
+    var unpublishedTmp: IIssue = unpublishedData[i];
     await smtCache.addId(
       BigInt(length + i),
-      unpublishedTmp.publicKey,
+      unpublishedTmp.owner,
       BigInt(unpublishedTmp.CCCD),
       BigInt(unpublishedTmp.sex),
       BigInt(unpublishedTmp.DoBdate),
@@ -158,10 +156,10 @@ async function published(req: Request) {
     throw Error("Invalid claim tree root");
   }
   for (let i = 0; i < unpublishedData.length; i++) {
-    var unpublishedTmp: IClaim = unpublishedData[i];
+    var unpublishedTmp: IIssue = unpublishedData[i];
     let resInsert = await smtDb.addId(
       BigInt(length + i),
-      unpublishedTmp.publicKey,
+      unpublishedTmp.owner,
       BigInt(unpublishedTmp.CCCD),
       BigInt(unpublishedTmp.sex),
       BigInt(unpublishedTmp.DoBdate),
@@ -178,28 +176,27 @@ async function published(req: Request) {
   }
 
   for (let i = 0; i < unpublishedData.length; i++) {
-    var unpublishedTmp: IClaim = unpublishedData[i];
+    var unpublishedTmp: IIssue = unpublishedData[i];
     await Issue.findOneAndUpdate(
       { CCCD: unpublishedTmp.CCCD },
       { status: IdentityStatus.PUBLISHED, publishAt: Date.now() }
     );
-    await Claim.findOneAndUpdate(
+    await Issue.findOneAndUpdate(
       { CCCD: unpublishedTmp.CCCD },
       { isPublish: true }
     );
     var mapping = new IdentityMapping({
       indexCard: length + i,
-      publicKey: unpublishedTmp.publicKey,
+      publicKey: unpublishedTmp.owner,
     });
     var identityCard = new IdentityCard({
       leafIndex: length + i,
       CCCD: unpublishedTmp.CCCD,
-      firstName: unpublishedTmp.firstName,
-      lastName: unpublishedTmp.lastName,
+      name: unpublishedTmp.name,
       sex: unpublishedTmp.sex,
       DoBdate: unpublishedTmp.DoBdate,
       BirthPlace: unpublishedTmp.BirthPlace,
-      claimAt: unpublishedTmp.claimAt,
+      approvedAt: unpublishedTmp.approvedAt,
       status: IdentityStatus.PUBLISHED,
     });
     var newPublish = new Publish({

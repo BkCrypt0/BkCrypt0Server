@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import { claimIdentity } from "../controllers/claimControllers";
-import { revoke , getRevokeData} from "../controllers/revokeControllers";
+import { revoke, getRevokeData } from "../controllers/revokeControllers";
 import { isAdmin } from "../services/authentication";
 
 const router = express.Router();
@@ -14,8 +13,8 @@ router.post(
         return res.status(401).json({ message: "Authentication" });
       }
 
-    var resData = await getRevokeData(req)
-    return res.status(201).json(resData);
+      var resData = await getRevokeData(req);
+      return res.status(201).json(resData);
     } catch (err) {
       console.error("Error POST /revoke/data", err);
       return res.status(404).json({ errMessage: (err as Error).message });

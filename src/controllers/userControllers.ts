@@ -1,6 +1,6 @@
 import * as mongoose from "mongoose";
 import IdentityCard, { IIdentityCard } from "../models/identityCard";
-import Issue, {IIssue} from "../models/IssueSchema"
+import Issue, { IIssue } from "../models/IssueSchema";
 import IdentityMapping, { IIdentityMapping } from "../models/identityMapping";
 import { Request, Response } from "express";
 import { LevelDB, RevokeDb } from "../../connect";
@@ -14,9 +14,8 @@ async function getUserInformation(req: Request): Promise<IIssue | null> {
     return null;
   }
   var publicKey = [publicKeyX, publicKeyY];
-  const issueFind = await Issue.findOne({claimer: publicKey});
+  const issueFind = await Issue.findOne({ requester: publicKey });
   return issueFind;
-
 }
 
 async function getUserProofMerkleTree(req: Request) {

@@ -1,11 +1,12 @@
-import * as mongoose from "mongoose";
 import Issue, { IIssue } from "../models/IssueSchema";
-import { Request, Response } from "express";
+import { Request } from "express";
 import { isIssue } from "../services/checkIssue";
+import { verifyRequestIssue } from "../utils/verifySignature";
+import { Eddsa } from "../../connect";
 
 async function getAllIssue(): Promise<IIssue[]> {
-  var issuaData = Issue.find();
-  return issuaData;
+  var issueData = Issue.find();
+  return issueData;
 }
 
 async function issueNewIdentityCard(req: Request): Promise<IIssue | null> {
@@ -14,8 +15,22 @@ async function issueNewIdentityCard(req: Request): Promise<IIssue | null> {
   if (checkIssue) {
     throw Error("Issue Exist");
   }
+
+  var verify = await verifyRequestIssue(
+    dataRaw.requester,
+    dataRaw.CCCD,
+    dataRaw.sex,
+    dataRaw.DoBdate,
+    dataRaw.BirthPlace,
+    dataRaw.signature,
+    await Eddsa.getInstance()
+  );
+  if (!verify) {
+    throw Error("Invalid Signature");
+  }
+
   var issue: IIssue = new Issue(dataRaw);
-  issue.issueAt = Date.now();
+  issue.requestAt = Date.now();
   issue.save();
   return issue;
 }

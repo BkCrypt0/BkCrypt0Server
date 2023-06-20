@@ -1,12 +1,11 @@
 import * as mongoose from "mongoose";
 import { ProvinceSchema } from "../models/provinceSchema";
 import { Request, Response } from "express";
-
 const Province = mongoose.model("Province", ProvinceSchema);
 
 async function getAllProvince() {
-  var issuaData = Province.find();
-  return issuaData;
+  var issueData = Province.find();
+  return issueData;
 }
 
 async function addNewProvince(req: Request) {

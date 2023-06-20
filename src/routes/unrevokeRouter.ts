@@ -1,6 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import { claimIdentity } from "../controllers/claimControllers";
-import { unrevoke , getUnRevokeData} from "../controllers/unrevokeControllers";
+import { unrevoke, getUnRevokeData } from "../controllers/unrevokeControllers";
 import { isAdmin } from "../services/authentication";
 
 const router = express.Router();
@@ -14,8 +13,8 @@ router.post(
         return res.status(401).json({ message: "Authentication" });
       }
 
-    var resData = await getUnRevokeData(req)
-    return res.status(201).json(resData);
+      var resData = await getUnRevokeData(req);
+      return res.status(201).json(resData);
     } catch (err) {
       console.error("Error POST /unrevoke/data", err);
       return res.status(404).json({ errMessage: (err as Error).message });
